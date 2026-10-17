@@ -1,0 +1,8 @@
+# Keep the deploy purely static — exclude the local-only Flask dev server
+# so Vercel does not auto-detect a Python project and look for an entrypoint.
+Stands/app.py
+requirements.txt
+__pycache__/
+*.pyc
+.venv/
+venv/
