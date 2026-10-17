@@ -297,6 +297,39 @@
   };
   function team(id){ return TEAM[id] || {color:"#5A626D", short:id, file:null}; }
 
+  /* ============ backend API ============
+     Standings come from the Flask backend deployed on Render, which proxies
+     the championship feed. Override at runtime with window.API_BASE if needed. */
+  var API_BASE = (typeof window !== "undefined" && window.API_BASE) ||
+                 "https://f1-dashboard-and-analysis.onrender.com";
+  var CHAMPIONSHIP_URL = API_BASE.replace(/\/+$/, "") + "/api/championship";
+
+  /* Map backend teamName -> local TEAM key (for colours, logos, short names). */
+  var TEAM_BY_NAME = {
+    "mercedes":"mercedes", "ferrari":"ferrari", "mclaren":"mclaren",
+    "red bull racing":"red_bull", "red bull":"red_bull",
+    "racing bulls":"rb", "rb f1 team":"rb", "rb":"rb", "visa cash app rb":"rb",
+    "alpine":"alpine", "alpine f1 team":"alpine", "bwt alpine f1 team":"alpine",
+    "haas":"haas", "haas f1 team":"haas", "moneygram haas f1 team":"haas",
+    "audi":"audi", "sauber":"audi", "kick sauber":"audi", "stake f1 team kick sauber":"audi",
+    "williams":"williams",
+    "aston martin":"aston_martin", "aston martin aramco":"aston_martin",
+    "cadillac":"cadillac"
+  };
+  function teamKey(name){
+    if(!name) return "";
+    return TEAM_BY_NAME[String(name).trim().toLowerCase()] || "";
+  }
+
+  /* Map backend nationality (3-letter code) -> adjective used by NAT. */
+  var NAT_BY_CODE = {
+    ITA:"Italian", GBR:"British", GER:"German", DEU:"German", MON:"Monégasque",
+    NED:"Dutch", NLD:"Dutch", AUS:"Australian", FRA:"French", NZL:"New Zealander",
+    ARG:"Argentine", BRA:"Brazilian", ESP:"Spanish", THA:"Thai", JPN:"Japanese",
+    CAN:"Canadian", MEX:"Mexican", FIN:"Finnish", USA:"American"
+  };
+  function natName(x){ return NAT_BY_CODE[String(x || "").toUpperCase()] || x; }
+
   /* ============ nationality → { flag emoji, country label } ============ */
   var NAT = {
     "Italian":       ["🇮🇹","Italy"],
@@ -399,23 +432,38 @@
   pendingImg.then(function(b){  imgBase = b;  });
   pendingLogo.then(function(b){ logoBase = b; });
 
-  /* ============ normalize ============ */
+  /* ============ normalize (backend shape) ============
+     Backend returns: { season, drivers:[...], constructors:[...] } where each
+     driver has { position, driverId, firstName, lastName, teamName,
+     nationality, wins, points } and each constructor has
+     { position, teamName, nationality, wins, points }. */
   function normalizeDrivers(list){
-    return list.map(function(r){
+    return (list || []).map(function(r){
+      var tid = teamKey(r.teamName);
       return {
-        pos:+r.position, id:r.Driver.code, name:r.Driver.givenName+" "+r.Driver.familyName,
-        num:r.Driver.permanentNumber, teamId:r.Constructors[0].constructorId,
-        teamName:r.Constructors[0].name, nationality:r.Driver.nationality,
-        wins:+r.wins, pts:+r.points
+        pos:+r.position,
+        id:String(r.driverId || "").toUpperCase(),
+        name:[r.firstName, r.lastName].filter(Boolean).join(" "),
+        num:r.driverNumber,
+        teamId:tid || r.teamName,
+        teamName:r.teamName,
+        nationality:natName(r.nationality),
+        wins:+r.wins || 0,
+        pts:+r.points || 0
       };
     });
   }
   function normalizeCtors(list){
-    return list.map(function(r){
+    return (list || []).map(function(r){
+      var tid = teamKey(r.teamName || r.name);
       return {
-        pos:+r.position, id:r.Constructor.constructorId, name:r.Constructor.name,
-        teamId:r.Constructor.constructorId, nationality:r.Constructor.nationality,
-        wins:+r.wins, pts:+r.points
+        pos:+r.position,
+        id:tid || r.teamName || r.name,
+        name:r.teamName || r.name,
+        teamId:tid || r.teamName || r.name,
+        nationality:natName(r.nationality),
+        wins:+r.wins || 0,
+        pts:+r.points || 0
       };
     });
   }
@@ -426,17 +474,17 @@
   }
 
   function fetchLive(){
-    var url = view === "drivers"
-      ? "https://api.jolpi.ca/ergast/f1/current/driverstandings/?limit=30"
-      : "https://api.jolpi.ca/ergast/f1/current/constructorstandings/";
-    return fetch(url, {headers:{"Accept":"application/json"}})
+    return fetch(CHAMPIONSHIP_URL, {headers:{"Accept":"application/json"}})
       .then(function(res){ if(!res.ok) throw new Error("HTTP "+res.status); return res.json(); })
       .then(function(j){
-        var sl = j.MRData.StandingsTable.StandingsLists[0];
-        $("mSeason").textContent = sl.season;
-        $("mRound").textContent = sl.round;
-        $("seasonChip").textContent = sl.season + " Season";
-        return view === "drivers" ? normalizeDrivers(sl.DriverStandings) : normalizeCtors(sl.ConstructorStandings);
+        if(j.season){
+          $("mSeason").textContent = j.season;
+          $("seasonChip").textContent = j.season + " Season";
+        }
+        if(j.round != null){ $("mRound").textContent = j.round; }
+        return view === "drivers"
+          ? normalizeDrivers(j.drivers)
+          : normalizeCtors(j.constructors);
       });
   }
 
