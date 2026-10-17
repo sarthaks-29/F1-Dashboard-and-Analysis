@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORMULA 1 CIRCUITS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(211, 7, 7, 0.15), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(252, 61, 61, 0.08), transparent 35%),
+                linear-gradient(135deg, #050505, #111116 50%, #09090c);
+            color: white;
+        }
+
+        .page-header {
+            position: relative;
+            height: 260px;
+            overflow: hidden;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(211, 7, 7, 0.13),
+                    transparent 55%
+                ),
+                linear-gradient(
+                    135deg,
+                    #050505,
+                    #101015,
+                    #050505
+                );
+
+            border-bottom: 1px solid rgba(252, 61, 61, 0.2);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            animation: headerAppear 1.2s ease-out;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 5px;
+            margin-bottom: 12px;
+        }
+
+        .header-content h1 {
+            color: white;
+            font-size: 58px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            line-height: 1;
+        }
+
+        .header-content h1 span {
+            color: #FC3D3D;
+            text-shadow:
+                0 0 15px rgba(252, 61, 61, 0.4),
+                0 0 35px rgba(252, 61, 61, 0.15);
+        }
+
+        .header-line {
+            width: 90px;
+            height: 3px;
+            background: #FC3D3D;
+            margin: 18px auto 14px;
+
+            box-shadow:
+                0 0 12px rgba(252, 61, 61, 0.7);
+
+            animation: lineExpand 1s ease-out;
+        }
+
+        .description {
+            color: #999;
+            font-size: 15px;
+            letter-spacing: 1px;
+        }
+
+        .speed-line {
+            position: absolute;
+            height: 1px;
+            width: 500px;
+
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(252, 61, 61, 0.7),
+                transparent
+            );
+
+            opacity: 0;
+            transform: rotate(-15deg);
+
+            animation: racingLine 5s linear infinite;
+        }
+
+        .line-one {
+            top: 35px;
+            left: -500px;
+            animation-delay: 0s;
+        }
+
+        .line-two {
+            top: 130px;
+            left: -700px;
+            animation-delay: 1.7s;
+        }
+
+        .line-three {
+            top: 210px;
+            left: -600px;
+            animation-delay: 3.2s;
+        }
+
+        @keyframes racingLine {
+            0% {
+                left: -600px;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            70% {
+                opacity: 0.5;
+            }
+
+            100% {
+                left: 110%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes headerAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes lineExpand {
+            from {
+                width: 0;
+                opacity: 0;
+            }
+
+            to {
+                width: 90px;
+                opacity: 1;
+            }
+        }
+
+        .container {
+            width: 90%;
+            margin: 45px auto 60px;
+
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            height: 260px;
+            position: relative;
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            border-radius: 16px;
+            overflow: hidden;
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.5),
+                0 0 0 rgba(252, 61, 61, 0);
+
+            transition: 0.35s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+
+            border-color: rgba(252, 61, 61, 0.6);
+
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.7),
+                0 0 25px rgba(252, 61, 61, 0.15);
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+
+            padding: 25px;
+
+            background:
+                linear-gradient(
+                    to top,
+                    rgba(0, 0, 0, 0.95) 0%,
+                    rgba(0, 0, 0, 0.65) 45%,
+                    rgba(0, 0, 0, 0.15) 100%
+                );
+
+            color: white;
+        }
+
+        .overlay h2 {
+            margin: 0;
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+
+            text-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .overlay p {
+            margin: 8px 0 0;
+            font-size: 18px;
+            color: #e5e5e5;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 720px) {
+
+            .page-header {
+                height: 220px;
+            }
+
+            .header-content h1 {
+                font-size: 38px;
+                letter-spacing: 2px;
+            }
+
+            .subtitle {
+                font-size: 10px;
+                letter-spacing: 3px;
+            }
+
+            .description {
+                font-size: 12px;
+            }
+
+            .container {
+                width: 92%;
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card {
+                height: 230px;
+            }
+
+            .overlay h2 {
+                font-size: 32px;
+            }
+
+            .overlay p {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="page-header">
+
+        <div class="speed-line line-one"></div>
+        <div class="speed-line line-two"></div>
+        <div class="speed-line line-three"></div>
+
+        <div class="header-content">
+            <p class="subtitle">THE WORLD'S FASTEST CIRCUITS</p>
+
+            <h1>
+                FORMULA 1 <span>CIRCUITS</span>
+            </h1>
+
+            <div class="header-line"></div>
+
+            <p class="description">
+                Explore the legendary tracks of the Formula 1 calendar
+            </p>
+        </div>
+
+    </header>
+
+    <div class="container">
+
+        <div class="card" style="background-image:url('circuits/Australia.png')">
+            <div class="overlay">
+                <h2>Australia</h2>
+                <p>Melbourne: Albert Park Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/china.avif')">
+            <div class="overlay">
+                <h2>China</h2>
+                <p>Shanghai: Shanghai International Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Japan.avif')">
+            <div class="overlay">
+                <h2>Japan</h2>
+                <p>Suzuka: Suzuka Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Bahrain.jpg')">
+            <div class="overlay">
+                <h2>Bahrain</h2>
+                <p>Sakhir: Bahrain International Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/SA.jpg')">
+            <div class="overlay">
+                <h2>Saudi Arabia</h2>
+                <p>Jeddah: Jeddah Corniche Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/USA.avif')">
+            <div class="overlay">
+                <h2>USA</h2>
+                <p>Miami: Miami International Autodrome</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Canada.jpg')">
+            <div class="overlay">
+                <h2>Canada</h2>
+                <p>Montreal: Circuit Gilles Villeneuve</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Monaco.jpg')">
+            <div class="overlay">
+                <h2>Monaco</h2>
+                <p>Monaco: Circuit de Monaco</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Barcelona.jpg')">
+            <div class="overlay">
+                <h2>Spain</h2>
+                <p>Barcelona: Circuit de Barcelona-Catalunya</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Austria.jpg')">
+            <div class="overlay">
+                <h2>Austria</h2>
+                <p>Spielberg: Red Bull Ring</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/UK.jpg')">
+            <div class="overlay">
+                <h2>United Kingdom</h2>
+                <p>Silverstone: Silverstone Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Belgium.jpg')">
+            <div class="overlay">
+                <h2>Belgium</h2>
+                <p>Spa: Circuit de Spa-Francorchamps</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Hungary.webp')">
+            <div class="overlay">
+                <h2>Hungary</h2>
+                <p>Budapest: Hungaroring</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Netharlands.webp')">
+            <div class="overlay">
+                <h2>Netherlands</h2>
+                <p>Zandvoort: Circuit Zandvoort</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Italy.avif')">
+            <div class="overlay">
+                <h2>Italy</h2>
+                <p>Monza: Autodromo Nazionale Monza</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Madrid.jpg')">
+            <div class="overlay">
+                <h2>Spain</h2>
+                <p>Madrid: Madrid Street Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Azerbaijan.jpg')">
+            <div class="overlay">
+                <h2>Azerbaijan</h2>
+                <p>Baku: Baku City Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Singapore.jpg')">
+            <div class="overlay">
+                <h2>Singapore</h2>
+                <p>Singapore: Marina Bay Street Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Austin.jpg')">
+            <div class="overlay">
+                <h2>USA</h2>
+                <p>Austin: Circuit of the Americas</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Mexico.avif')">
+            <div class="overlay">
+                <h2>Mexico</h2>
+                <p>Mexico City: Autódromo Hermanos Rodríguez</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Brasil.jpg')">
+            <div class="overlay">
+                <h2>Brazil</h2>
+                <p>São Paulo: Interlagos</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/LasVegas.jpg')">
+            <div class="overlay">
+                <h2>USA</h2>
+                <p>Las Vegas: Las Vegas Strip Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/Quatar.jpeg')">
+            <div class="overlay">
+                <h2>Qatar</h2>
+                <p>Lusail: Lusail International Circuit</p>
+            </div>
+        </div>
+
+        <div class="card" style="background-image:url('circuits/UAE.webp')">
+            <div class="overlay">
+                <h2>UAE</h2>
+                <p>Abu Dhabi: Yas Marina Circuit</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

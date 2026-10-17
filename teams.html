@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORMULA 1 TEAMS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background:
+                radial-gradient(
+                    circle at 50% 20%,
+                    rgba(255, 0, 0, 0.12),
+                    transparent 25%
+                ),
+                radial-gradient(
+                    circle at 10% 80%,
+                    rgba(0, 90, 255, 0.08),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 70%,
+                    rgba(255, 120, 0, 0.06),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #020204 0%,
+                    #11131a 45%,
+                    #050507 100%
+                );
+
+            font-family: Arial, Helvetica, sans-serif;
+            padding-bottom: 60px;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+
+            background:
+                linear-gradient(
+                    120deg,
+                    transparent 0%,
+                    rgba(255,255,255,0.025) 25%,
+                    transparent 50%
+                );
+
+            background-size: 700px 700px;
+
+            animation: backgroundSweep 10s linear infinite;
+
+            opacity: 0.8;
+        }
+
+        @keyframes backgroundSweep {
+            0% {
+                background-position: -700px -700px;
+            }
+
+            100% {
+                background-position: 700px 700px;
+            }
+        }
+
+        .page-header {
+            position: relative;
+            height: 270px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(225, 6, 0, 0.12),
+                    transparent 55%
+                );
+
+            border-bottom: 1px solid rgba(225, 6, 0, 0.25);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+
+            animation: headerAppear 1.2s ease-out;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            margin-bottom: 15px;
+        }
+
+        .header-content h1 {
+            color: #fff;
+            font-size: 62px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            line-height: 1;
+        }
+
+        .header-content h1 span {
+            color: #e10600;
+
+            text-shadow:
+                0 0 15px rgba(225, 6, 0, 0.5),
+                0 0 35px rgba(225, 6, 0, 0.2);
+        }
+
+        .header-line {
+            width: 100px;
+            height: 3px;
+
+            margin: 20px auto 15px;
+
+            background: #e10600;
+
+            box-shadow:
+                0 0 15px rgba(225, 6, 0, 0.7);
+
+            animation: lineExpand 1s ease-out;
+        }
+
+        .description {
+            color: #777;
+            font-size: 14px;
+            letter-spacing: 1.5px;
+        }
+
+        .speed-line {
+            position: absolute;
+
+            width: 500px;
+            height: 1px;
+
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(225, 6, 0, 0.65),
+                transparent
+            );
+
+            transform: rotate(-15deg);
+            opacity: 0;
+
+            animation: racingLine 5s linear infinite;
+        }
+
+        .line-one {
+            top: 30px;
+            left: -500px;
+        }
+
+        .line-two {
+            top: 125px;
+            left: -700px;
+            animation-delay: 1.6s;
+        }
+
+        .line-three {
+            top: 220px;
+            left: -600px;
+            animation-delay: 3.1s;
+        }
+
+        @keyframes racingLine {
+            0% {
+                left: -600px;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            70% {
+                opacity: 0.4;
+            }
+
+            100% {
+                left: 110%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes headerAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes lineExpand {
+            from {
+                width: 0;
+                opacity: 0;
+            }
+
+            to {
+                width: 100px;
+                opacity: 1;
+            }
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1600px;
+            margin: 50px auto;
+
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+
+            position: relative;
+            z-index: 2;
+
+            perspective: 1200px;
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            height: 280px;
+
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+
+            border-radius: 24px;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: rotateY(180deg);
+        }
+
+        .front,
+        .back {
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            border-radius: 24px;
+            overflow: hidden;
+
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+
+            box-shadow:
+                0 15px 35px rgba(0,0,0,.5);
+
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .front {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            padding: 25px;
+            color: white;
+        }
+
+        .front::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background: linear-gradient(
+                to top,
+                rgba(0,0,0,.90) 0%,
+                rgba(0,0,0,.45) 45%,
+                rgba(0,0,0,.10) 100%
+            );
+
+            z-index: 1;
+        }
+
+        .overlay {
+            position: relative;
+            z-index: 2;
+
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-header h2 {
+            font-size: 38px;
+            font-weight: 700;
+            line-height: 1;
+
+            text-shadow:
+                0 3px 10px rgba(0,0,0,.7);
+        }
+
+        .card-header img {
+            width: 55px;
+            height: 55px;
+
+            object-fit: contain;
+
+            filter:
+                drop-shadow(0 4px 7px rgba(0,0,0,.6));
+        }
+
+        .front p {
+            font-size: 18px;
+            margin-top: 12px;
+            opacity: .95;
+        }
+
+        .car {
+            width: 100%;
+            max-height: 150px;
+
+            object-fit: contain;
+
+            filter:
+                drop-shadow(0 12px 10px rgba(0,0,0,.6));
+        }
+
+        .back {
+            transform: rotateY(180deg);
+        }
+
+        .back img {
+            width: 100%;
+            height: 130%;
+
+            object-fit: cover;
+            display: block;
+        }
+
+        .back::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background: linear-gradient(
+                to top,
+                rgba(0,0,0,.65),
+                rgba(0,0,0,.15),
+                transparent
+            );
+        }
+
+        @media (max-width: 1100px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .page-header {
+                height: 230px;
+            }
+
+            .header-content h1 {
+                font-size: 40px;
+                letter-spacing: 2px;
+            }
+
+            .subtitle {
+                font-size: 8px;
+                letter-spacing: 3px;
+            }
+
+            .description {
+                font-size: 11px;
+            }
+
+            .container {
+                width: 92%;
+                grid-template-columns: 1fr;
+                gap: 22px;
+            }
+
+            .card {
+                height: 240px;
+            }
+
+            .card-header h2 {
+                font-size: 30px;
+            }
+
+            .car {
+                max-height: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="page-header">
+
+    <div class="speed-line line-one"></div>
+    <div class="speed-line line-two"></div>
+    <div class="speed-line line-three"></div>
+
+    <div class="header-content">
+
+        <p class="subtitle">
+            THE TEAMS • THE DRIVERS • THE MACHINES
+        </p>
+
+        <h1>
+            FORMULA 1 <span>TEAMS</span>
+        </h1>
+
+        <div class="header-line"></div>
+
+        <p class="description">
+            Meet the teams competing at the pinnacle of motorsport
+        </p>
+
+    </div>
+
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#00A19C,#35F2E5);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Mercedes</h2>
+                    <img src="logos/mercedes.png" alt="Mercedes">
+                </div>
+
+                <p>George Russell • Kimi Antonelli</p>
+
+                <img class="car" src="cars/Mercedes.avif" alt="Mercedes Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/GK.jpg" alt="Mercedes">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#8B0000,#E10600);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Ferrari</h2>
+                    <img src="logos/ferrari.png" alt="Ferrari">
+                </div>
+
+                <p>Charles Leclerc • Lewis Hamilton</p>
+
+                <img class="car" src="cars/Ferrari.avif" alt="Ferrari Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/LL.jpg" alt="Ferrari">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#FF8000,#FFB000);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>McLaren</h2>
+                    <img src="logos/mclaren.png" alt="McLaren">
+                </div>
+
+                <p>Lando Norris • Oscar Piastri</p>
+
+                <img class="car" src="cars/McLaren.avif" alt="McLaren Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/LO.jpg" alt="McLaren">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#0B3D91,#1E63E9);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Red Bull Racing</h2>
+                    <img src="logos/redbull.png" alt="Red Bull">
+                </div>
+
+                <p>Max Verstappen • Isack Hadjar</p>
+
+                <img class="car" src="cars/RedBull.avif" alt="Red Bull Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/MH.jpg" alt="Red Bull">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#00594F,#00997A);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Aston Martin</h2>
+                    <img src="logos/AstonMartin.png" alt="Aston Martin">
+                </div>
+
+                <p>Fernando Alonso • Lance Stroll</p>
+
+                <img class="car" src="cars/AstonMartin.avif" alt="Aston Martin Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/AS.jpg" alt="Aston Martin">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#0055FF,#00BFFF);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Alpine</h2>
+                    <img src="logos/alpine.png" alt="Alpine">
+                </div>
+
+                <p>Pierre Gasly • Franco Colapinto</p>
+
+                <img class="car" src="cars/Alpine.avif" alt="Alpine Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/GC.jpg" alt="Alpine">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#0057B8,#00AEEF);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Williams</h2>
+                    <img src="logos/williams.png" alt="Williams">
+                </div>
+
+                <p>Alexander Albon • Carlos Sainz</p>
+
+                <img class="car" src="cars/Williams.avif" alt="Williams Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/CA.jpg" alt="Williams">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#555555,#A9A9A9);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Haas</h2>
+                    <img src="logos/haas.png" alt="Haas">
+                </div>
+
+                <p>Esteban Ocon • Oliver Bearman</p>
+
+                <img class="car" src="cars/Haas.avif" alt="Haas Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/BO.jpg" alt="Haas">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#1B2950,#4D72D0);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Racing Bulls</h2>
+                    <img src="logos/racingbulls.png" alt="Racing Bulls">
+                </div>
+
+                <p>Liam Lawson • Arvid Lindblad</p>
+
+                <img class="car" src="cars/RacingBulls.avif" alt="Racing Bulls Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/AL.jpg" alt="Racing Bulls">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#004225,#00A86B);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Audi</h2>
+                    <img src="logos/audi.png" alt="Audi">
+                </div>
+
+                <p>Nico Hülkenberg • Gabriel Bortoleto</p>
+
+                <img class="car" src="cars/Audi.avif" alt="Audi Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/HB.jpg" alt="Audi">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="front" style="background:linear-gradient(135deg,#111111,#444444);">
+            <div class="overlay">
+                <div class="card-header">
+                    <h2>Cadillac</h2>
+                    <img src="logos/cadillac.png" alt="Cadillac">
+                </div>
+
+                <p>Sergio Pérez • Valtteri Bottas</p>
+
+                <img class="car" src="cars/Cadillac.avif" alt="Cadillac Car">
+            </div>
+        </div>
+
+        <div class="back">
+            <img src="lineups/BP.jpg" alt="Cadillac">
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
